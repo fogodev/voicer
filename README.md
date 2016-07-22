@@ -16,3 +16,5 @@ Word recognition application based on Weightless Neural Network WiSARD (Wilkes, 
 
 ###Temporal Resampling graphs
 ![Temporal Resampling and Thermometer downscale](https://github.com/FogoDev/voicer/blob/master/results/temporal%20resampling%20and%20thermometer%208%20downscale.png?raw=true)
+![Temporal Resampling and Thermometer upscale](https://github.com/FogoDev/voicer/blob/master/results/temporal%20resampling%20and%20thermometer%208%20upscale.png?raw=true)
+
