@@ -1,0 +1,6 @@
+Adicionar as bibliotecas de preprocessamento
+ - portAudio
+ - libSndFile
+
+Incorporar os arquivos de preprocessamento com o resto do programa
+ - Decidir se vamos usar CMAKE ou Makefile

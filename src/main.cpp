@@ -35,25 +35,9 @@ void printResults(std::vector<std::string> results) {
 }
 
 int main(int argc, char **argv) {
-    // Training data
-    //std::vector<std::vector<int>> trainingSamples;
-    //std::vector<std::string> trainingClasses;
 
-    // Actual samples for preditcion
-    //std::vector<std::vector<int>> samples;
+    //Kernel Canvas
 
-    //wann::WiSARD *wisard = new wann::WiSARD(RETINA_LENGTH, NUM_BITS_ADDR);
-    
-    // Train
-    //getTrainingData(&trainingSamples, &trainingClasses);
-    //wisard->fit(trainingSamples, trainingClasses);
-
-    // Predict
-    //getSamples(&samples);
-    //std::vector<std::string> results = wisard->predict(samples);
-    
-    // Print results
-    //printResults(results);
     int inputSize, newSize = 20;
     double* inputValues;
     double* resampledValues;
@@ -99,6 +83,28 @@ int main(int argc, char **argv) {
     printIntArray(newSize, discreteValues);
     printf("Retina:\n");
     printMatrix(precision, newSize, retina);
+
+    //WiSARD
+
+    // Training data
+    std::vector<std::vector<int>> trainingSamples;
+    std::vector<std::string> trainingClasses;
+
+    // Actual samples for preditcion
+    std::vector<std::vector<int>> samples;
+
+    wann::WiSARD *wisard = new wann::WiSARD(RETINA_LENGTH, NUM_BITS_ADDR);
+    
+    // Train
+    getTrainingData(&trainingSamples, &trainingClasses);
+    wisard->fit(trainingSamples, trainingClasses);
+
+    // Predict
+    getSamples(&samples);
+    std::vector<std::string> results = wisard->predict(samples);
+    
+    // Print results
+    printResults(results);
 
     return 0;
 }
