@@ -121,7 +121,7 @@ void buildRetina(int size, int* discreteValues, int precision, int** retina, int
 		}
 	}
 }
-
+/*
 int main(int argc, char** argv){
 	int inputSize, newSize = 20;
 	double* inputValues;
@@ -171,3 +171,4 @@ int main(int argc, char** argv){
 
 	return 0;
 }
+*/
