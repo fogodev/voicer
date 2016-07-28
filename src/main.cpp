@@ -10,6 +10,8 @@
 #define RETINA_LENGTH (RESAMPLING_SIZE * PRECISION)
 #define NUM_BITS_ADDR 2
 
+#define INVALID_FILE "Invalid filename"
+
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
     std::stringstream ss(s);
     std::string item;
@@ -29,6 +31,10 @@ double* readInputFromFile(std::string path, int* inputSize) {
   double *inputValues;
   double value;
   std::ifstream file (path);
+
+  if(!file.is_open()) {
+    throw INVALID_FILE;
+  }
 
   file >> *inputSize;
 
@@ -91,6 +97,10 @@ void getTrainingData(std::string trainingDataPath, std::vector<std::vector<int>>
     std::ifstream file (trainingDataPath);
     std::string line;
 
+    if (!file.is_open()) {
+      throw INVALID_FILE;
+    }
+
     while (std::getline(file, line)) {
       std::vector<std::string> tokens = split(line, ' ');
 
@@ -144,15 +154,31 @@ int main(int argc, char **argv) {
     wann::WiSARD *wisard = new wann::WiSARD(RETINA_LENGTH, NUM_BITS_ADDR);
 
     // Train
-    getTrainingData(trainingDataPath, trainingSamples, trainingClasses);
+    try {
+      getTrainingData(trainingDataPath, trainingSamples, trainingClasses);
+    } catch (const char* exception) {
+      std::cerr << exception << " (training data)"<<  std::endl;
+      return 1;
+    }
+
     wisard->fit(trainingSamples, trainingClasses);
 
     // Predict
-    while (getSamples(samples)) {
+    while (true) {
+      try {
+        if (!getSamples(samples)) {
+          break;
+        }
+      } catch (const char* exception) {
+        std::cerr << exception <<  std::endl;
+        continue;
+      }
+
       std::vector<std::string> results = wisard->predict(samples);
 
       // Print results
       printResults(results);
+      std::cout << std::endl;
 
       samples.clear();
     }
