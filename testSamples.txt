@@ -1,0 +1,3 @@
+genwavs/a_3.gw
+genwavs/b_3.gw
+-q

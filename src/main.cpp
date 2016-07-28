@@ -102,9 +102,19 @@ void getTrainingData(std::string trainingDataPath, std::vector<std::vector<int>>
 }
 
 // Initializes the samples vector with the samples for prediction
-void getSamples(std::vector<std::vector<int>> &samples) {
-    samples.push_back(buildRetinaFromFile("genwavs/a_3.gw", RESAMPLING_SIZE, PRECISION)); // a
-    samples.push_back(buildRetinaFromFile("genwavs/b_3.gw", RESAMPLING_SIZE, PRECISION)); // b
+bool getSamples(std::vector<std::vector<int>> &samples) {
+    std::string path;
+
+    std::cout << "Enter file for prediction (-q to exit)" << std::endl;
+    std::cin >> path;
+
+    if (path.compare("-q")) {
+      samples.push_back(buildRetinaFromFile(path, RESAMPLING_SIZE, PRECISION));
+    } else {
+      return false;
+    }
+
+    return true;
 }
 
 void printResults(std::vector<std::string> results) {
@@ -138,11 +148,15 @@ int main(int argc, char **argv) {
     wisard->fit(trainingSamples, trainingClasses);
 
     // Predict
-    getSamples(samples);
-    std::vector<std::string> results = wisard->predict(samples);
+    while (getSamples(samples)) {
+      std::vector<std::string> results = wisard->predict(samples);
 
-    // Print results
-    printResults(results);
+      // Print results
+      printResults(results);
+
+      samples.clear();
+    }
+
 
     return 0;
 }
