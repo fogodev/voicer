@@ -2,12 +2,28 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "kernelCanvas.hpp"
 
 #define RESAMPLING_SIZE 32
 #define PRECISION 8
 #define RETINA_LENGTH (RESAMPLING_SIZE * PRECISION)
 #define NUM_BITS_ADDR 2
+
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, elems);
+    return elems;
+}
 
 double* readInputFromFile(std::string path, int* inputSize) {
   double *inputValues;
@@ -71,13 +87,18 @@ std::vector<int> buildRetinaFromFile(std::string path, int resamplingSize, int p
 }
 
 // Initializes vectors with training data.
-void getTrainingData(std::vector<std::vector<int>> &trainingSamples, std::vector<std::string> &trainingClasses) {
-    trainingSamples.push_back(buildRetinaFromFile("genwavs/a_1.gw", RESAMPLING_SIZE, PRECISION));
-    trainingSamples.push_back(buildRetinaFromFile("genwavs/a_2.gw", RESAMPLING_SIZE, PRECISION));
-    trainingSamples.push_back(buildRetinaFromFile("genwavs/b_1.gw", RESAMPLING_SIZE, PRECISION));
-    trainingSamples.push_back(buildRetinaFromFile("genwavs/b_2.gw", RESAMPLING_SIZE, PRECISION));
+void getTrainingData(std::string trainingDataPath, std::vector<std::vector<int>> &trainingSamples, std::vector<std::string> &trainingClasses) {
+    std::ifstream file (trainingDataPath);
+    std::string line;
 
-    trainingClasses = {"a", "a", "b", "b"};
+    while (std::getline(file, line)) {
+      std::vector<std::string> tokens = split(line, ' ');
+
+      trainingSamples.push_back(buildRetinaFromFile(tokens[0], RESAMPLING_SIZE, PRECISION));
+      trainingClasses.push_back(tokens[1]);
+    }
+
+    file.close();
 }
 
 // Initializes the samples vector with the samples for prediction
@@ -98,8 +119,14 @@ void printResults(std::vector<std::string> results) {
 
 int main(int argc, char **argv) {
     // Training data
+    std::string trainingDataPath;
     std::vector<std::vector<int>> trainingSamples;
     std::vector<std::string> trainingClasses;
+
+    // get training data path from the argument
+    if (argc > 1) {
+      trainingDataPath = argv[1];
+    }
 
     // Actual samples for preditcion
     std::vector<std::vector<int>> samples;
@@ -107,7 +134,7 @@ int main(int argc, char **argv) {
     wann::WiSARD *wisard = new wann::WiSARD(RETINA_LENGTH, NUM_BITS_ADDR);
 
     // Train
-    getTrainingData(trainingSamples, trainingClasses);
+    getTrainingData(trainingDataPath, trainingSamples, trainingClasses);
     wisard->fit(trainingSamples, trainingClasses);
 
     // Predict

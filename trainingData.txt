@@ -1,0 +1,4 @@
+genwavs/a_1.gw a
+genwavs/a_2.gw a
+genwavs/b_1.gw b
+genwavs/b_2.gw b
