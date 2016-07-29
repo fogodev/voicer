@@ -14,9 +14,8 @@ double f(double x, int f_sin=10, int f_cos=3){
 }
 
 double addNoise(double x, double intensity){
-		srand(time(NULL));
 		double noise = rand()/((double)RAND_MAX);
-		noise = noise - 1/2;
+		noise = noise - 0.5;
 		noise *= 2 * intensity;
 		if(x + noise > 2 || x - noise < -2){
 			return x;
@@ -26,14 +25,14 @@ double addNoise(double x, double intensity){
 
 int main (int argc, char** argv){
         double* amps;
-        double sampleRate = 0.1;//in time units, should be named inverse of sampleRate
-        int size = 30;
-        int f_sin = 10; //default value, can be overwritten with an argument
-        int f_cos = 3;  //default value, ...
-		double intensity = 0.1;
+        double sampleRate = 0.1;//in time units, should be named inverse of sampleRate. Default value, can be overwritten with an argument
+        int size = 30; //default value, can be overwritten with an argument
+        double f_sin = 10; //default value, ...
+        double f_cos = 3;  //default value, ...
+        double intensity = 0.1; //default value, ...
 
-        if(argc < 5){
-                printf("ERROR: Wrong number of parameters. (size, f_sin, f_cos, intensity)\n");
+        if(argc < 6){
+                printf("ERROR: Wrong number of parameters (size, sample period, f_sin, f_cos, intensity).\n");
                 exit(-1);
         }
         else{
@@ -41,16 +40,22 @@ int main (int argc, char** argv){
         }
 
         if (argc > 2) {
-                f_sin = atoi(argv[2]);
+                sampleRate = atof(argv[2]);
         }
 
         if (argc > 3) {
-                f_cos = atoi(argv[3]);
+                f_sin = atof(argv[3]);
         }
-		if (argc > 4){
-				intensity = atof(argv[4]);
-		}
 
+        if (argc > 4) {
+                f_cos = atof(argv[4]);
+        }
+	
+        if (argc > 5){
+		intensity = atof(argv[5]);
+	}
+
+        srand(time(NULL));
         amps = (double*) malloc(size * sizeof(double));
 
         for(int i = 0; i < size; i++){
