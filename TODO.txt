@@ -4,3 +4,9 @@ Adicionar as bibliotecas de preprocessamento
 
 Incorporar os arquivos de preprocessamento com o resto do programa
  - Decidir se vamos usar CMAKE ou Makefile
+
+Gerar varios exemplos
+ - fazer bash que gera N exemplos com o genWAV
+
+Exportar valores
+ - fazer um programa programa que gera um CSV a partir dos resultados do genWAV
