@@ -6,11 +6,15 @@ Word recognition application based on Weightless Neural Network WiSARD (Wilkes, 
 
 ## How to Install
 
-1. ./install.sh
+```bash
+./install.sh
+```
 
 ## How to Use
 
-./build/GenWAV | ./build/main
+```bash
+./build/main <training file>
+```
 
 ##Results
 
