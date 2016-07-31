@@ -21,3 +21,7 @@ Word recognition application based on Weightless Neural Network WiSARD (Wilkes, 
 ###Generated waves
 ![Generated wave with white noise](https://github.com/FogoDev/voicer/blob/master/results/genWAV%20with%20noise%20sample.png?raw=true)
 
+###Treating waves
+![Original audio](https://github.com/FogoDev/voicer/blob/master/results/pre%20processing/original%20wav.png?raw=true)
+![Windowed audio](https://github.com/FogoDev/voicer/blob/master/results/pre%20processing/windowed.png?raw=true)
+
