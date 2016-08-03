@@ -5,10 +5,10 @@
 #include <sstream>
 #include "kernelCanvas.hpp"
 
-#define RESAMPLING_SIZE 32
-#define PRECISION 8
+#define RESAMPLING_SIZE 1024
+#define PRECISION 32
 #define RETINA_LENGTH (RESAMPLING_SIZE * PRECISION)
-#define NUM_BITS_ADDR 2
+#define NUM_BITS_ADDR 3
 
 #define INVALID_FILE "Invalid filename"
 

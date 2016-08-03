@@ -1,0 +1,6 @@
+realWavs/a1_Guilherme.gw a
+realWavs/a2_Guilherme.gw a
+realWavs/a3_Guilherme.gw a
+realWavs/b1_Guilherme.gw b
+realWavs/b2_Guilherme.gw b
+realWavs/b3_Guilherme.gw b
