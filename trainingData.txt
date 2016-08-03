@@ -3,3 +3,11 @@ genwavs/a_3.gw a
 genwavs/a_4.gw a
 genwavs/b_1.gw b
 genwavs/b_3.gw b
+genwavs/c_1.gw c
+genwavs/c_2.gw c
+genwavs/c_3.gw c
+genwavs/c_4.gw c
+genwavs/c_5.gw c
+genwavs/c_6.gw c
+genwavs/c_7.gw c
+
