@@ -1,4 +1,4 @@
-# Voicer (Temporary Name)
+# Vox (Temporary Name)
 
 Word recognition application based on Weightless Neural Network WiSARD (Wilkes, Stonham and Aleksander Recognition Device)
 
@@ -28,4 +28,5 @@ Word recognition application based on Weightless Neural Network WiSARD (Wilkes, 
 ###Treating waves
 ![Original audio](https://github.com/FogoDev/voicer/blob/master/results/pre%20processing/original%20wav.png?raw=true)
 ![Windowed audio](https://github.com/FogoDev/voicer/blob/master/results/pre%20processing/windowed.png?raw=true)
+![Audio DFT](https://github.com/FogoDev/voicer/blob/master/results/pre%20processing/FFT.png?raw=true)
 
