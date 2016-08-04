@@ -1,16 +1,16 @@
 #ifndef __KERNELCANVAS_HPP_
 #define __KERNELCANVAS_HPP_
 
-void printArray(int size, double* array);
+void printArray(const vector<int>& array);
 
-void printIntArray(int size, int* array);
+void printMatrix(const vector<vector<double>>& matrix);
 
-void printMatrix(int x, int y, int** matrix);
+double distance(const vector<double>& v1, const vector<double>& v2);
 
-void temporalResampling(int size, double* input, int newSize, double* resampled);
+vector<vector<double>> generateKernels(int amount, int dimensions);
 
-int thermometerDiscretization(int size, double* values, int* discreteValues, int precision, int _maxVal, int _minVal);
+vector<vector<double>> smoothStroke(vector<vector<double>>& input, double minDistance);
 
-void buildRetina(int size, int* discreteValues, int precision, int** retina, int startingValue);
+vector<int> kernelCanvas(vector<vector<double>>& input, vector<vector<double>>& kernels, int kernelsAmount);
 
 #endif

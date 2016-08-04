@@ -18,7 +18,7 @@ void printMatrix( const vector<vector<double>>& matrix){
 	int i = 0, j = 0;
 	for(i = 0; i < matrix.size(); i++){
 		for(j = 0; j < matrix[i].size(); j++){
-			printf("%lf, ", matrix[i][j]);
+			printf("%lf ", matrix[i][j]);
 		}
 		printf("\n");
 	}
@@ -44,22 +44,24 @@ vector<vector<double>> generateKernels(int amount, int dimensions){
 	return kernels;
 }
 
-vector<vector<double>> smoothStroke(const vector<vector<double>>& input, double minDistance){
+vector<vector<double>> smoothStroke(vector<vector<double>>& input, double minDistance){
 	vector<vector<double>> smooth;
 	vector<double> lastPoint = input[0];
 	smooth.push_back(input[0]);
 	for (int i = 1; i < input.size(); ++i){
 		if(distance(lastPoint, input[i]) >= minDistance){
 			smooth.push_back(input[i]);
+			lastPoint = input[i];
 		}
 	}
 	return smooth;
 }
 
-vector<int> kernelCanvas(vector<vector<double>>& input, vector<vector<double>>& kernels){
+vector<int> kernelCanvas(vector<vector<double>>& input, vector<vector<double>>& kernels, int kernelsAmount){
 	if(kernels.size() == 0){
 		printf("Generating Kernels\n");
-		kernels = generateKernels(input.size(), input[0].size());
+		kernels = generateKernels(kernelsAmount, input[0].size());
+		printMatrix(kernels);
 	}
 	kernels = smoothStroke(input, MIN_DIST);
 	vector<int> canvas(input.size() * input[0].size(), 0.0);
@@ -86,21 +88,21 @@ vector<int> kernelCanvas(vector<vector<double>>& input, vector<vector<double>>& 
 	return canvas;
 }
 
-int main(int argc, char const *argv[])
-{
-	srand(12345);
-	vector<vector<double>> input = generateKernels(20, 3);
-	srand(3);
-	vector<vector<double>> kernels = generateKernels(10, 3);
+// int main(int argc, char const *argv[])
+// {
+// 	//srand(12345);
+// 	vector<vector<double>> input = generateKernels(20, 3);
+// 	//srand(3);
+// 	vector<vector<double>> kernels = generateKernels(10, 3);
 
-	vector<int> canvas = kernelCanvas(input, kernels);
+// 	vector<int> canvas = kernelCanvas(input, kernels);
 
-	printf("Input\n");
-	printMatrix(input);
-	printf("Kernels\n");
-	printMatrix(kernels);
-	printf("Canvas\n");
-	printArray(canvas);
+// 	printf("Input\n");
+// 	printMatrix(input);
+// 	printf("Kernels\n");
+// 	printMatrix(kernels);
+// 	printf("Canvas\n");
+// 	printArray(canvas);
 
-	return 0;
-}
+// 	return 0;
+// }

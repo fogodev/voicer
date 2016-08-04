@@ -1,16 +1,17 @@
 #include "../include/WiSARD.hpp"
+#include "../include/PreProcessing.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include "kernelCanvas.hpp"
 
-#define RESAMPLING_SIZE 1024
-#define PRECISION 32
-#define RETINA_LENGTH (RESAMPLING_SIZE * PRECISION)
+#define KERNEL_AMOUNT 1024
 #define NUM_BITS_ADDR 3
 
 #define INVALID_FILE "Invalid filename"
+
+using namespace voicer;
 
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
     std::stringstream ss(s);
@@ -27,73 +28,50 @@ std::vector<std::string> split(const std::string &s, char delim) {
     return elems;
 }
 
-double* readInputFromFile(std::string path, int* inputSize) {
-  double *inputValues;
-  double value;
+std::vector<std::vector<double>> getKernelsFromFile(std::string path){
+  int size, length;
+  std::vector<std::vector<double>> kernels;
   std::ifstream file (path);
-
   if(!file.is_open()) {
-    throw INVALID_FILE;
+    printf("ERROR: Invalid or no kernel file chosen\n");
+    return kernels;
   }
 
-  file >> *inputSize;
-
-  inputValues = (double *) malloc(*inputSize * sizeof(double));
-  for (int i = 0 ; i < *inputSize ; i++) {
-    file >> inputValues[i];
+  file >> size;
+  kernels.resize(size);
+  file >> length;
+  for(int i = 0; i < kernels.size(); i++){
+    for(int j = 0; j < length; j++){
+      file >> kernels[i][j];
+    }
   }
+  return kernels;
 
-  file.close();
-  return inputValues;
 }
 
-std::vector<int> buildRetinaFromFile(std::string path, int resamplingSize, int precision) {
+std::vector<int> buildRetinaFromFile(std::string path, std::vector<std::vector<double>>& kernels, int kernelsAmount) {
   int inputSize;
-  double* inputValues;
-  double* resampledValues;
-  int* discreteValues;
+  vector<vector<double>> inputValues;
   int** retina;
-  int zeroIndex = precision/2;
 
   std::vector<int> retinaVector;
 
-  inputValues = readInputFromFile(path, &inputSize);
+  PreProcessing p;
+  vector<vector<double>> processedAudio = p.loadAudioFile(path);
+  // for(int i = 0; i < processedAudio.size(); i++){
+  //   for(int j = 0; j < processedAudio[i].size(); j++){
+  //     printf("%lf ", processedAudio[i][j]);
+  //   }
+  //   printf("\n");
+  // }
 
-  // allocate memory for the intermediate arrays
-	resampledValues = (double *) malloc(resamplingSize * sizeof(double));
-	discreteValues = (int *) malloc(resamplingSize * sizeof(int));
-	retina = (int**) malloc(precision * sizeof(int*));
-
-  for(int i = 0; i < precision; i++){
-		retina[i] = (int*) malloc(resamplingSize * sizeof(int));
-	}
-
-  //Do intermediate steps to build retina matrix
-  temporalResampling(inputSize, inputValues, resamplingSize, resampledValues);
-  zeroIndex = thermometerDiscretization(resamplingSize, resampledValues, discreteValues, precision, 0, 0);
-  buildRetina(resamplingSize, discreteValues, precision, retina, zeroIndex);
-
-  //Converts retina matrix into a vector
-  for (int i = 0 ; i < precision ; i++) {
-    for (int j = 0 ; j < resamplingSize ; j++) {
-      retinaVector.push_back(retina[i][j]);
-    }
-  }
-
-  // Free all arrays used in the process
-  free(inputValues);
-  free(resampledValues);
-  free(discreteValues);
-  for (int i = 0 ; i < precision ; i++) {
-    free(retina[i]);
-  }
-  free(retina);
+  retinaVector = kernelCanvas(processedAudio, kernels, kernelsAmount);
 
   return retinaVector;
 }
 
 // Initializes vectors with training data.
-void getTrainingData(std::string trainingDataPath, std::vector<std::vector<int>> &trainingSamples, std::vector<std::string> &trainingClasses) {
+void getTrainingData(std::string trainingDataPath, std::vector<std::vector<int>> &trainingSamples, std::vector<std::string> &trainingClasses, std::vector<std::vector<double>>& kernels) {
     std::ifstream file (trainingDataPath);
     std::string line;
 
@@ -104,7 +82,7 @@ void getTrainingData(std::string trainingDataPath, std::vector<std::vector<int>>
     while (std::getline(file, line)) {
       std::vector<std::string> tokens = split(line, ' ');
 
-      trainingSamples.push_back(buildRetinaFromFile(tokens[0], RESAMPLING_SIZE, PRECISION));
+      trainingSamples.push_back(buildRetinaFromFile(tokens[0], kernels, KERNEL_AMOUNT));
       trainingClasses.push_back(tokens[1]);
     }
 
@@ -112,14 +90,14 @@ void getTrainingData(std::string trainingDataPath, std::vector<std::vector<int>>
 }
 
 // Initializes the samples vector with the samples for prediction
-bool getSamples(std::vector<std::vector<int>> &samples) {
+bool getSamples(std::vector<std::vector<int>> &samples, std::vector<std::vector<double>>& kernels) {
     std::string path;
 
     std::cout << "Enter file for prediction (-q to exit)" << std::endl;
     std::cin >> path;
 
     if (path.compare("-q")) {
-      samples.push_back(buildRetinaFromFile(path, RESAMPLING_SIZE, PRECISION));
+      samples.push_back(buildRetinaFromFile(path, kernels, KERNEL_AMOUNT));
     } else {
       return false;
     }
@@ -137,25 +115,45 @@ void printResults(std::vector<std::string> results) {
     std::cout << std::endl;
 }
 
+void printVec(std::vector<std::vector<double>> vec){
+  for (int i = 0; i < vec.size(); i++){
+    for (int j = 0; j < vec[j].size(); j++){
+      printf("%lf ", vec[i][j]);
+    }
+    printf("\n");
+  }
+}
+
 int main(int argc, char **argv) {
-    // Training data
+
+    //Training data
     std::string trainingDataPath;
     std::vector<std::vector<int>> trainingSamples;
     std::vector<std::string> trainingClasses;
+    std::vector<std::vector<double>> kernels;
+    
 
     // get training data path from the argument
     if (argc > 1) {
       trainingDataPath = argv[1];
     }
 
+    if(argc > 2){
+      kernels = getKernelsFromFile(argv[2]);
+      printf("Kernels read from file.\n");
+      printf("%lu\n", kernels.size());
+      printf("%lu\n", kernels[0].size());
+      printVec(kernels);
+    }
+
     // Actual samples for preditcion
     std::vector<std::vector<int>> samples;
 
-    wann::WiSARD *wisard = new wann::WiSARD(RETINA_LENGTH, NUM_BITS_ADDR);
+    wann::WiSARD *wisard = new wann::WiSARD(KERNEL_AMOUNT, NUM_BITS_ADDR);
 
     // Train
     try {
-      getTrainingData(trainingDataPath, trainingSamples, trainingClasses);
+      getTrainingData(trainingDataPath, trainingSamples, trainingClasses, kernels);
     } catch (const char* exception) {
       std::cerr << exception << " (training data)"<<  std::endl;
       return 1;
@@ -166,7 +164,7 @@ int main(int argc, char **argv) {
     // Predict
     while (true) {
       try {
-        if (!getSamples(samples)) {
+        if (!getSamples(samples, kernels)) {
           break;
         }
       } catch (const char* exception) {
@@ -182,7 +180,6 @@ int main(int argc, char **argv) {
 
       samples.clear();
     }
-
 
     return 0;
 }
