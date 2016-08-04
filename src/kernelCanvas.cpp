@@ -58,9 +58,10 @@ vector<vector<double>> smoothStroke(const vector<vector<double>>& input, double 
 
 vector<int> kernelCanvas(vector<vector<double>>& input, vector<vector<double>>& kernels){
 	if(kernels.size() == 0){
+		printf("Generating Kernels\n");
 		kernels = generateKernels(input.size(), input[0].size());
 	}
-	kernels = smoothStroke(kernels, MIN_DIST);
+	kernels = smoothStroke(input, MIN_DIST);
 	vector<int> canvas(input.size() * input[0].size(), 0.0);
 	int closestKernel;
 	double lastDistance, currentDistance;
@@ -71,11 +72,14 @@ vector<int> kernelCanvas(vector<vector<double>>& input, vector<vector<double>>& 
 		lastDistance = distance(input[i], kernels[0]);
 		for(j = 1; j < kernels.size(); j++){
 			currentDistance = distance(input[i], kernels[j]);
+			printf("currentDistance (%lf) [%d] < lastDistance (%lf) [%d]\n", currentDistance, j, lastDistance, closestKernel);
 			if(currentDistance < lastDistance){
+				printf("in\n");
 				lastDistance = currentDistance;
 				closestKernel = j;
 			}
 		}
+		printf("Input %d ==> %d\n", i, closestKernel);
 		canvas[closestKernel] = 1;
 	}
 
@@ -84,8 +88,9 @@ vector<int> kernelCanvas(vector<vector<double>>& input, vector<vector<double>>& 
 
 int main(int argc, char const *argv[])
 {
-	srand(time(NULL));
+	srand(12345);
 	vector<vector<double>> input = generateKernels(20, 3);
+	srand(3);
 	vector<vector<double>> kernels = generateKernels(10, 3);
 
 	vector<int> canvas = kernelCanvas(input, kernels);
