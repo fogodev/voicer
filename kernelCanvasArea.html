@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Kernel Canvas Area</title>
+</head>
+<body>
+
+<canvas id="retina" width="400px" height="300"></canvas>
+
+<script type="text/javascript">
+var colors = [
+		"#352db4",
+		"#1fefac",
+		"#22bd7b",
+		"#ea8ffc",
+		"#5112e1",
+		"#baded9",
+		"#81221f",
+		"#4fba63",
+		"#b5eebc",
+		"#462ee0",
+		"#1da2c6",
+		"#90e04b",
+		"#6d63bd",
+		"#e3c051",
+		"#1ee4b8",
+		"#f87e7a",
+		"#36596c",
+		"#f0cc3c",
+		"#cf7a5c",
+		"#c35317"
+	]
+
+	var canvas = document.querySelector("#retina");
+	var ctx = canvas.getContext("2d");
+	var x = 0;
+	var y = 0;
+	var color;
+	var kernels = [];
+
+	for(var i = 0; i < colors.length; i++){
+		x = Math.random() * canvas.width;
+		y = Math.random() * canvas.height;
+		kernels[i] = {"x":x, "y":y};
+	}
+	for(var i = 0; i < canvas.width; i++){
+		for (var j = 0; j < canvas.height; j++) {
+			color = findClosestKernel(i, j);
+			ctx.fillStyle = colors[color];
+			ctx.fillRect(i,j,1,1);
+		}
+	}
+
+	ctx.fillStyle = "#000000";
+	for(var i = 0; i < colors.length; i++){
+		x = kernels[i].x;
+		y = kernels[i].y;
+		kernels[i] = {"x":x, "y":y};
+
+		ctx.beginPath();
+		ctx.arc(x,y,3,0,2*Math.PI);
+		ctx.stroke();
+	}
+
+	function distance(x1, y1, x2, y2){
+		return Math.sqrt( (x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2) );
+	}
+
+	function findClosestKernel(x, y){
+		var lastDistance, currentDistance;
+		var closest = 0;
+		lastDistance = distance(x,y, kernels[0].x, kernels[0].y);
+		for(var i = 0; i < kernels.length; i++){
+			currentDistance = distance(x,y, kernels[i].x, kernels[i].y);
+			if(currentDistance < lastDistance){
+				lastDistance = currentDistance;
+				closest = i;
+			}
+		}
+		return closest;
+	}
+	
+</script>
+
+</body>
+</html>
