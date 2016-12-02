@@ -13,7 +13,7 @@ Word recognition application based on Weightless Neural Network WiSARD (Wilkes, 
 ## How to Use
 
 ```bash
-./build/main <training file>
+./execute.sh
 ```
 
 ##Results
