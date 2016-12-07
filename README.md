@@ -4,6 +4,14 @@ Word recognition application based on Weightless Neural Network WiSARD (Wilkes, 
 
 ## Instructions
 
+## Requirements
+
+Libs: FFTW, libsndfile, PortAudio
+```bash
+sudo apt-get update
+sudo apt-get install libfftw3-3 libfftw3-bin libfftw3-dev libfftw3-double3 libfftw3-long3 libfftw3-quad3 libfftw3-single3 libsndfile1 libsndfile1-dev sndfile-tools libportaudio2
+```
+
 ## How to Install
 
 ```bash
@@ -14,6 +22,17 @@ Word recognition application based on Weightless Neural Network WiSARD (Wilkes, 
 
 ```bash
 ./execute.sh
+```
+
+## How to modify parameters
+
+To modify PreProcessing parameters edit include/PreProcessing.h
+To modify WiSARD parameters, the constructor of WiSARD is called on line 152 of src/main.cpp file, this constructor can be changed according to [libwann github page](https://github.com/firmino/libwann)
+
+After changes, run the rebuild script as 
+
+```bash
+./rebuild.sh
 ```
 
 ##Results

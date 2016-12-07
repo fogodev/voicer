@@ -12,7 +12,7 @@ cd ../
 ########## PreProcessing - https://github.com/HeavenVolkoff/PreProcessing.git ########## 
 
 # Cloning from github and generating build
-git clone --recursive https://github.com/HeavenVolkoff/PreProcessing.git
+git clone --recursive https://github.com/FogoDev/PreProcessing.git
 cd PreProcessing
 cmake ./
 make
@@ -27,10 +27,6 @@ mv libwann/include/*.hpp ./include/
 mv libwann/build/libwann.so ./libs/
 mv PreProcessing/libPreProcessing.so ./libs
 mv PreProcessing/include/PreProcessing.h ./include
-
-# Cleaning libwann from directory
-rm -Rf libwann 
-rm -Rf PreProcessing
 
 # Build application
 make all
