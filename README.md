@@ -27,7 +27,7 @@ sudo apt-get install libfftw3-3 libfftw3-bin libfftw3-dev libfftw3-double3 libff
 ## How to modify parameters
 
 To modify PreProcessing parameters edit include/PreProcessing.h
-To modify WiSARD parameters, the constructor of WiSARD is called on line 152 of src/main.cpp file, this constructor can be changed according to [libwann github page](https://github.com/firmino/libwann)
+To modify WiSARD parameters, search for "WiSARD constructor call" on src/main.cpp file, this constructor can be changed according to [libwann github page](https://github.com/firmino/libwann)
 
 After changes, run the rebuild script as 
 

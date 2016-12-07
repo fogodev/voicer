@@ -149,7 +149,14 @@ int main(int argc, char **argv) {
     // Actual samples for preditcion
     std::vector<std::vector<int>> samples;
 
-    wann::WiSARD *wisard = new wann::WiSARD(KERNEL_AMOUNT, NUM_BITS_ADDR);
+    /*********************************************************************
+     *******************    WiSARD constructor call    *******************
+     *********************************************************************/
+     wann::WiSARD *wisard = new wann::WiSARD(KERNEL_AMOUNT, NUM_BITS_ADDR);
+    /*********************************************************************
+     *********************************************************************
+     *********************************************************************/
+
 
     // Train
     try {
