@@ -24,6 +24,8 @@ sudo apt-get install libfftw3-3 libfftw3-bin libfftw3-dev libfftw3-double3 libff
 ./execute.sh
 ```
 
+It will ask the name of training data file and then will start the program, to test sound files just write the path to file like "realWavs/a1_Guilherme.wav"
+
 ## How to modify parameters
 
 To modify PreProcessing parameters edit include/PreProcessing.h
