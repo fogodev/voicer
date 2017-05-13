@@ -22,12 +22,12 @@ sudo apt-get install libfftw3-3 libfftw3-bin libfftw3-dev libfftw3-double3 libff
 ./execute.sh
 ```
 
-It will ask for the name of a training data file and then actually start the program. To test different sound files just provide their paths. For instamce: `realWavs/a1_Guilherme.wav`.
+It will ask for the name of a training data file and then actually start the program. To test different sound files just provide their paths. For instance: `realWavs/a1_Guilherme.wav`.
 
 ## How to modify parameters
 
 To modify PreProcessing parameters, edit `include/PreProcessing.h`.
-To modify WiSARD parameters, search for "WiSARD constructor call" on `src/main.cpp` file, this constructor can be changed according to [libwann github page](https://github.com/firmino/libwann).
+To modify WiSARD parameters, search for "WiSARD constructor call" on `src/main.cpp` file. This constructor can be modified according to [libwann github page](https://github.com/firmino/libwann).
 
 After any changes, run the rebuild script: 
 
